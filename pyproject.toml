@@ -1,13 +1,27 @@
 [project]
-name = "state-machine"
+name = "semantic-state-machine"
 version = "0.1.0"
-description = "Add your description here"
+description = "A lightweight, type-safe Python state machine implementation using modern Python 3.13+ features."
 readme = "README.md"
 authors = [
     { name = "Richard West", email = "dopplereffect.us@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = []
+keywords = ["state-machine", "finite-state-machine", "type-safety", "audit"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+license = { text = "MIT" }
+
+[project.urls]
+Homepage = "https://github.com/rjdw/semantic-state-machine"
+Repository = "https://github.com/rjdw/semantic-state-machine"
+Issues = "https://github.com/rjdw/semantic-state-machine/issues"
 
 [build-system]
 requires = ["uv_build>=0.9.26,<0.10.0"]
