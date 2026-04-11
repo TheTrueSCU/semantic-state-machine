@@ -8,9 +8,9 @@ jobs:
   pypi-publish:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/semantic-state-machine
+    # environment:
+    #   name: pypi
+    #   url: https://pypi.org/p/semantic-state-machine
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
@@ -30,6 +30,4 @@ jobs:
         run: uv build
 
       - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.15.0
-        with:
-          environment: pypi
+        uses: pypa/gh-action-pypi-publish@v1.13.0
