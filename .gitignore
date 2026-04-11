@@ -1,13 +1,14 @@
 # Python-generated files
 __pycache__/
-.coverage/
-*.py[oc]
 build/
 dist/
 html_report/
 report_output/
 wheels/
+
+.coverage
 *.egg-info
+*.py[oc]
 
 # Virtual environments
 .venv

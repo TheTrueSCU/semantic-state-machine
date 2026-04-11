@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
-from state_machine.state_machine import AuditContext, AuditedStateMachine
+from semantic_state_machine.state_machine import AuditContext, AuditedStateMachine
 
 
 class DocState(Enum):

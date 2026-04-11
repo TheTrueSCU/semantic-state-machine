@@ -17,6 +17,12 @@ This project uses `uv` for dependency management. To get started, ensure you hav
 uv sync
 ```
 
+You can install the package via pip:
+
+```bash
+pip install semantic-state-machine
+```
+
 ## Usage
 
 ### Basic State Machine
@@ -25,7 +31,7 @@ Define your states and events as `Enum`s and create a context class.
 
 ```python
 from enum import Enum
-from state_machine import StateMachine
+from semantic_state_machine import StateMachine
 
 class State(Enum):
     LOCKED = 1
@@ -62,7 +68,7 @@ current_state = sm.handle_transition(ctx, current_state, Event.COIN)
 Use `AuditedStateMachine` and `AuditContext` to automatically track the history of transitions.
 
 ```python
-from state_machine import AuditedStateMachine, AuditContext
+from semantic_state_machine import AuditedStateMachine, AuditContext
 
 class MyContext(AuditContext[State, Event]):
     pass
@@ -99,6 +105,6 @@ The current implementation maintains **100% code coverage** across the core logi
 
 ## Project Structure
 
-- `src/state_machine/`: Core implementation.
+- `src/semantic_state_machine/`: Core implementation.
 - `tests/unit/`: Focused unit tests for individual components.
 - `tests/integration/`: End-to-end workflow simulations.

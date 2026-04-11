@@ -1,6 +1,6 @@
 from enum import Enum
 import pytest
-from state_machine.state_machine import (
+from semantic_state_machine.state_machine import (
     AuditContext,
     AuditedStateMachine,
     InvalidTransition,
