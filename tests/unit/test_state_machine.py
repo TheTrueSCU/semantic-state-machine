@@ -1,13 +1,11 @@
 from enum import Enum
 import pytest
 from semantic_state_machine.state_machine import (
-    Action,
     AuditContext,
     AuditedStateMachine,
     InvalidTransition,
     StateMachine,
 )
-
 
 class State(Enum):
     A = 1
