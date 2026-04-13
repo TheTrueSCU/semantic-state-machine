@@ -41,6 +41,9 @@ jobs:
           NEW_VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           OLD_VERSION=$(git show HEAD:pyproject.toml | python3 -c "import tomllib; import sys; print(tomllib.loads(sys.stdin.read().encode())['project']['version'])")
 
+          # Explicitly set the required commit_sha output to satisfy GHA requirements
+          echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
           if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
