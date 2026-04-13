@@ -50,6 +50,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTIONS: "false"
+          CI: "false"
       - name: Create Release PR
         if: steps.prepare.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
