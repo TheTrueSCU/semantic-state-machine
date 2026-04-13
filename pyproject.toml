@@ -48,3 +48,4 @@ dev = [
 version_toml = ["pyproject.toml:project.version"]
 build_command = "uv build"
 major_on_zero = false
+allow_zero_pushes = true
