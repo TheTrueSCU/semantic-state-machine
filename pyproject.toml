@@ -1,6 +1,6 @@
 [project]
 name = "semantic-state-machine"
-version = "0.1.0"
+version = "0.2.0"
 description = "A lightweight, type-safe Python state machine implementation using modern Python 3.13+ features."
 readme = "README.md"
 authors = [

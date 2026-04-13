@@ -4,7 +4,6 @@ from .state_machine import (
     AuditedStateMachine,
     InvalidTransition,
     StateMachine,
-    Transition,
 )
 
 __all__ = [
@@ -13,5 +12,4 @@ __all__ = [
     "AuditedStateMachine",
     "InvalidTransition",
     "StateMachine",
-    "Transition",
 ]

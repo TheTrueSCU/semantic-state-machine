@@ -1,4 +1,4 @@
-# State Machine
+# State Machine v0.2.0
 
 A lightweight, type-safe Python state machine implementation using modern Python 3.13+ features like PEP 695 type parameters.
 
@@ -48,12 +48,12 @@ class TurnstileContext:
 sm = StateMachine[State, Event, TurnstileContext]()
 
 @sm.transition(State.LOCKED, Event.COIN, State.UNLOCKED)
-def insert_coin(ctx: TurnstileContext):
+def insert_coin(ctx: TurnstileContext) -> None:
     ctx.total_coins += 1
     print("Coin inserted. Turnstile unlocked.")
 
 @sm.transition(State.UNLOCKED, Event.PUSH, State.LOCKED)
-def push_turnstile(ctx: TurnstileContext):
+def push_turnstile(ctx: TurnstileContext) -> None:
     print("Turnstile pushed. Turnstile locked.")
 
 # Usage

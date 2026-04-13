@@ -3,10 +3,70 @@ from enum import Enum
 from typing import Callable, Iterable, cast
 
 type Action[C] = Callable[[C], None]
-"""A callable that performs an action on a context object."""
+"""A callable that performs an action on a context object.
 
-type Transition[S: Enum, E: Enum, C] = dict[tuple[S, E], tuple[S, Action[C]]]
-"""A mapping of (state, event) to (target_state, action)."""
+Args:
+    C: The type of the context object passed to the action.
+"""
+
+type Audit[S, E] = tuple[S, E]
+"""A record of a state transition.
+
+Args:
+    S: The Enum type representing the states.
+    E: The Enum type representing the events.
+"""
+
+type AuditTrail[S, E] = list[Audit[S, E]]
+"""A sequence of transition records.
+
+Args:
+    S: The Enum type representing the states.
+    E: The Enum type representing the events.
+"""
+
+type AuditTrailFormatter[S: Enum, E: Enum, R] = Callable[[AuditTrail[S, E]], R]
+"""A callable that formats an audit trail.
+
+Args:
+    S: The Enum type representing the states.
+    E: The Enum type representing the events.
+    R: The return type of the formatter.
+"""
+
+type StateSelector[S] = S | Iterable[S]
+"""A selector for one or more states.
+
+Args:
+    S: The Enum type representing the states.
+"""
+
+type TransitionKey[S: Enum, E: Enum] = tuple[S, E]
+"""A key for a transition, composed of a state and an event.
+
+Args:
+    S: The Enum type representing the states.
+    E: The Enum type representing the events.
+"""
+
+type TransitionResult[S, C] = tuple[S, Action[C]]
+"""A result of a state transition, containing the target state and action.
+
+Args:
+    S: The Enum type representing the states.
+    C: The type of the context object passed to actions.
+"""
+
+type TransitionMap[S: Enum, E: Enum, C] = dict[
+    TransitionKey[S, E], TransitionResult[S, C]
+]
+"""A mapping of (state, event) to a transition result.
+
+Args:
+    S: The Enum type representing the states.
+    E: The Enum type representing the events.
+    C: The type of the context object passed to actions.
+"""
 
 
 @dataclass
@@ -23,7 +83,14 @@ class AuditContext[S: Enum, E: Enum]:
         inherited by user-defined context classes.
     """
 
-    _audit: list[tuple[S, E]] = field(default_factory=list)
+    _audit: AuditTrail[S, E] = field(default_factory=list)
+
+    def audit_trail[R](
+        self, formatter: AuditTrailFormatter[S, E, R] | None = None
+    ) -> R | AuditTrail[S, E]:
+        if formatter:
+            return formatter(self._audit)
+        return list(self._audit)
 
     def record_transition(self, from_state: S, event: E) -> None:
         """Records a transition from a given state triggered by an event.
@@ -59,7 +126,7 @@ class StateMachine[S: Enum, E: Enum, C]:
         sacrificing flexibility.
     """
 
-    _transitions: Transition[S, E, C] = field(default_factory=dict)
+    _transitions: TransitionMap[S, E, C] = field(default_factory=dict, init=False)
 
     def add_transition(
         self, from_state: S, event: E, to_state: S, func: Action[C]
@@ -93,7 +160,7 @@ class StateMachine[S: Enum, E: Enum, C]:
         action(ctx)
         return to_state
 
-    def _next_transition(self, from_state: S, event: E) -> tuple[S, Action[C]]:
+    def _next_transition(self, from_state: S, event: E) -> TransitionResult[S, C]:
         """Internal helper to retrieve the next transition.
 
         Args:
@@ -101,7 +168,7 @@ class StateMachine[S: Enum, E: Enum, C]:
             event: The event.
 
         Returns:
-            tuple[S, Action[C]]: A tuple of (target_state, action).
+            TransitionResult[S, C]: A tuple of (target_state, action).
 
         Raises:
             InvalidTransition: If the transition key is missing.
@@ -114,7 +181,7 @@ class StateMachine[S: Enum, E: Enum, C]:
             ) from e
 
     def transition(
-        self, from_state: S | Iterable[S], event: E, to_state: S
+        self, from_state: StateSelector[S], event: E, to_state: S
     ) -> Callable[[Action[C]], Action[C]]:
         """A decorator to register a transition for a function.
 
@@ -143,6 +210,17 @@ class StateMachine[S: Enum, E: Enum, C]:
             return func
 
         return decorator
+
+    @property
+    def transitions(self) -> set[tuple[TransitionKey[S, E], TransitionResult[S, C]]]:
+        """A set of all registered transitions.
+
+        Returns:
+            set[tuple[TransitionKey[S, E], TransitionResult[S, C]]]: A set of
+                transitions, where each item is a tuple of the transition key
+                and the transition result.
+        """
+        return set(self._transitions.items())
 
 
 @dataclass

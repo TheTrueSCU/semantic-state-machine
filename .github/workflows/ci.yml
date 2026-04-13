@@ -32,10 +32,6 @@ jobs:
         with:
           python-version-file: ".python-version"
 
-      - name: Set up just
-        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3.1.0
-
-
       - name: Install dependencies
         run: uv sync
 
@@ -47,3 +43,6 @@ jobs:
 
       - name: Run ty check
         run: uv run ty check
+
+      - name: Run pytest
+        run: uv run pytest tests
