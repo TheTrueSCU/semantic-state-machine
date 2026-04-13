@@ -41,4 +41,9 @@ dev = [
     "ruff>=0.15.10",
     "ty>=0.0.29",
     "hypothesis>=6.124.0",
+    "python-semantic-release>=9.16.1",
 ]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+build_command = "uv build"
