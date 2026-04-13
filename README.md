@@ -84,7 +84,11 @@ ctx = MyContext()
 sm.handle_transition(ctx, State.LOCKED, Event.COIN)
 
 # The transition is automatically recorded
-print(ctx._audit)  # [(State.LOCKED, Event.COIN)]
+print(ctx.audit_trail())  # [(State.LOCKED, Event.COIN)]
+
+# Example of a custom audit trail formatter (e.g., counting transitions)
+transition_count = ctx.audit_trail(lambda trail: len(trail))
+print(f"Total transitions: {transition_count}")  # Total transitions: 1
 ```
 
 ## Testing
