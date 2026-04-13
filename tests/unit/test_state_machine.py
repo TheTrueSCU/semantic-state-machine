@@ -7,6 +7,7 @@ from semantic_state_machine.state_machine import (
     StateMachine,
 )
 
+
 class State(Enum):
     A = 1
     B = 2
