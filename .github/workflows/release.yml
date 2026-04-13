@@ -32,23 +32,27 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
+          # Use a wrapper script that unsets GITHUB_ACTIONS to bypass the
+          # GitHub Actions environment integration in python-semantic-release.
+          # This prevents it from trying to write to the missing GHA outputs.
+          printf '#!/bin/bash\nunset GITHUB_ACTIONS\nsemantic-release "$@"' > run_sr.sh
+          chmod +x run_sr.sh
+
           # Calculate next version and update files locally
-          # We set to prevent the tool from trying to set
-          # GitHub Action outputs (like commit_sha) that don't exist in --no-push mode.
-          uv run semantic-release -vv version --no-push --no-tag
+          uv run ./run_sr.sh -vv version --no-push --no-tag
 
           # Detect if version changed by comparing pyproject.toml with HEAD
           NEW_VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           OLD_VERSION=$(git show HEAD:pyproject.toml | python3 -c "import tomllib; import sys; print(tomllib.loads(sys.stdin.read().encode())['project']['version'])")
 
-          # Explicitly set the required commit_sha output to satisfy GHA requirements
+          # Explicitly set the required outputs for later steps
           echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "changed=true" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_OUTPUT: ${{ runner.temp }}/github_output
+
       - name: Create Release PR
         if: steps.prepare.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
