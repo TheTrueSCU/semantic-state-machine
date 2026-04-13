@@ -33,13 +33,16 @@ jobs:
           git config --global user.email "github-actions@github.com"
 
           # Calculate next version and update files locally
-          # We set GITHUB_ACTIONS=false to prevent the tool from trying to set
+          # We set to prevent the tool from trying to set
           # GitHub Action outputs (like commit_sha) that don't exist in --no-push mode.
-          GITHUB_ACTIONS=false uv run semantic-release -vv version --no-push --no-tag
+          uv run semantic-release -vv version --no-push --no-tag
 
           # Detect if version changed by comparing pyproject.toml with HEAD
           NEW_VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           OLD_VERSION=$(git show HEAD:pyproject.toml | python3 -c "import tomllib; import sys; print(tomllib.loads(sys.stdin.read().encode())['project']['version'])")
+
+          # Explicitly set the required commit_sha output to satisfy GHA requirements
+          echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
           if [ "$NEW_VERSION" != "$OLD_VERSION" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
