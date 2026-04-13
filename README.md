@@ -1,4 +1,4 @@
-# State Machine v0.2.0
+# State Machine v0.3.0
 
 A lightweight, type-safe Python state machine implementation using modern Python 3.13+ features like PEP 695 type parameters.
 
@@ -112,3 +112,14 @@ The current implementation maintains **100% code coverage** across the core logi
 - `src/semantic_state_machine/`: Core implementation.
 - `tests/unit/`: Focused unit tests for individual components.
 - `tests/integration/`: End-to-end workflow simulations.
+- `tests/hypothesis/`: Property-based tests for robust edge-case discovery.
+
+## Development Standards
+
+This project adheres to professional, type-safe development practices:
+
+- **Pre-commit**: We enforce linting (`ruff`), formatting (`ruff-format`), and type checking (`ty`) using `pre-commit` hooks.
+- **Tiered Testing**:
+  - **Fast Lane**: Unit and integration tests run on every commit via the `check` CI job.
+  - **Robustness Lane**: Property-based fuzzing using `hypothesis` executes during Pull Requests to uncover edge cases.
+- **CI/CD**: The pipeline is configured to enforce quality, with static analysis and fast tests acting as a gateway for property-based robustness testing.
