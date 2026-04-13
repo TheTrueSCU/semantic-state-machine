@@ -33,10 +33,9 @@ jobs:
           git config --global user.email "github-actions@github.com"
 
           # Calculate next version and update files locally
-          # We disable GITHUB_OUTPUT to prevent the tool from trying to set
-          # outputs (like commit_sha) that don't exist in --no-push mode.
-          GITHUB_OUTPUT=false uv run semantic-release -vv version --no-push --no-tag --no-vcs-release
-
+          # We set GITHUB_ACTIONS=false to prevent the tool from trying to set
+          # GitHub Action outputs (like commit_sha) that don't exist in --no-push mode.
+          GITHUB_ACTIONS=false uv run semantic-release -vv version --no-push --no-tag --no-vcs-release
           # Detect if version changed by comparing pyproject.toml with HEAD
           NEW_VERSION=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
           OLD_VERSION=$(git show HEAD:pyproject.toml | python3 -c "import tomllib; import sys; print(tomllib.loads(sys.stdin.read().encode())['project']['version'])")
